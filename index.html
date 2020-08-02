@@ -8,18 +8,18 @@
   </head>
   <body>
     <script>
-      fetch('https://sigma1x2.com/', {
-        mode: 'no-cors',
-      })
-        .then(function (response) {
-          // The API call was successful!
-          return response.text();
-        })
-        .then(handleDOM)
-        .catch(function (err) {
-          // There was an error
-          console.warn('Something went wrong.', err);
-        });
+      //   fetch('https://sigma1x2.com/', {
+      //     mode: 'no-cors',
+      //   })
+      //     .then(function (response) {
+      //       // The API call was successful!
+      //       return response.text();
+      //     })
+      //     .then(handleDOM)
+      //     .catch(function (err) {
+      //       // There was an error
+      //       console.warn('Something went wrong.', err);
+      //     });
 
       function handleDOM(html) {
         // Convert the HTML string into a document object
@@ -54,7 +54,7 @@
           Body: bet,
         }).then((message) => {});
       }
-
+      sendMail('test netlify');
       function checkDb(bet) {
         const date = new Date().toDateString().split(' ').join('');
         fetch(
