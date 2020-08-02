@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://smtpjs.com/v3/smtp.js"></script>
+    <title></title>
+  </head>
+  <body>
+    <script>
+      fetch('https://sigma1x2.com/', {
+        mode: 'no-cors',
+      })
+        .then(function (response) {
+          // The API call was successful!
+          return response.text();
+        })
+        .then(handleDOM)
+        .catch(function (err) {
+          // There was an error
+          console.warn('Something went wrong.', err);
+        });
+
+      function handleDOM(html) {
+        // Convert the HTML string into a document object
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(html, 'text/html');
+        const x = doc.querySelectorAll('.post-date');
+        const today = new Date().getDate().toString();
+        const date = Array.from(x).find(
+          (e) => e.innerText.split(' ')[1].split(',')[0] === today
+        )?.innerHTML;
+        if (!date) {
+          //   let bet = x[0]
+          //     .closest('.post-content')
+          //     .querySelector('.entry')
+          //     .children[0].innerHTML.toString();
+          //   bet = bet.split('&nbsp;').join('');
+          bet = 'test';
+          if (bet) {
+            checkDb(bet);
+          }
+        }
+      }
+
+      function sendMail(bet) {
+        Email.send({
+          Host: 'smtp.elasticemail.com',
+          Username: 'jideadedejifirst@gmail.com',
+          Password: '73A3CF2632FD2073ECB964FB238EBC20E9CE',
+          To: 'jideadedejifirst@gmail.com',
+          From: 'jideadedejifirst@gmail.com',
+          Subject: 'Sigma',
+          Body: bet,
+        }).then((message) => {});
+      }
+
+      function checkDb(bet) {
+        const date = new Date().toDateString().split(' ').join('');
+        fetch(
+          'https://sigma-8639.restdb.io/rest/sigma?q={"date":"' + date + '"}',
+          {
+            headers: new Headers({
+              'x-apikey': '5f25f69367e4950327927bd7',
+            }),
+          }
+        )
+          .then((e) => e.json())
+          .then((e) => {
+            if (!e.length) {
+              postDb(bet);
+            }
+          });
+      }
+
+      function postDb(bet) {
+        const date = new Date().toDateString().split(' ').join('');
+        fetch('https://sigma-8639.restdb.io/rest/sigma', {
+          method: 'POST',
+          headers: new Headers({
+            'x-apikey': '5f25f69367e4950327927bd7',
+            Accept: 'application/json',
+            'cache-control': 'no-cache',
+            'Content-Type': 'application/json',
+          }),
+          body: JSON.stringify({ date }),
+          json: true,
+        })
+          .then((e) => e.json())
+          .then((e) => {
+            if (!e.length) {
+              sendMail(bet);
+            }
+          });
+      }
+    </script>
+  </body>
+</html>
