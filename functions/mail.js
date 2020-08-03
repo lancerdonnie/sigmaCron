@@ -85,11 +85,10 @@ exports.handler = function (event, context, callback) {
   JSDOM.fromURL('https://sigma1x2.com/')
     .then(handleDOM)
     .catch((err) => {
-      // There was an error
       console.warn('Something went wrong.', err);
     });
-  return {
+  callback(null, {
     statusCode: 200,
     body: 'hello world',
-  };
+  });
 };
